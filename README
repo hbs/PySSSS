@@ -1,0 +1,5 @@
+Python implementation of Shamir's Secret Sharing Scheme.
+
+Uses polynomials on GF256.
+
+Check pysss/PySSSS.py for usage.
