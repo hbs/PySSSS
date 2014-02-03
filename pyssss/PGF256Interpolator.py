@@ -25,6 +25,12 @@ class PGF256Interpolator:
   def interpolate(self,points):
     """Returns a PGF256 polynomial interpolating all GF256xGF256 tuples in points."""
 
+    if (2 == len(points)):
+      x = PGF256((GF256elt(0),GF256elt(1)))
+      P = PGF256([points[1][1]]) * (x - points[0][0]) * (GF256elt(1) / (points[1][0] - points[0][0]))
+      P = P + PGF256([points[0][1]]) * (x - points[1][0]) * (GF256elt(1) / (points[0][0] - points[1][0]));
+      return P
+
     #
     # Check that all points have different X
     #
