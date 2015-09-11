@@ -32,12 +32,13 @@ def pickRandomPolynomial(degree,zero):
   
   # Pick coefficients for x^n with n < degree
   
+  cryptogen = random.SystemRandom()
   for c in xrange(1,degree):
-    coeffs.append(GF256elt(random.randint(0,255)))
+    coeffs.append(GF256elt(cryptogen.randrange(0,255)))
           
   # Pick non null coefficient for x^degree
   
-  coeffs.append(GF256elt(random.randint(1,255)))
+  coeffs.append(GF256elt(cryptogen.randrange(1,255)))
   
   return PGF256(coeffs)
 
@@ -52,6 +53,7 @@ def encodeByte(byte,n,k):
   # Generate the keys
   keys = ["" for i in xrange(0,n)]
   
+  cryptogen = random.SystemRandom()
   for i in xrange(0,n):
 
     #        
@@ -61,15 +63,15 @@ def encodeByte(byte,n,k):
     # If we do not do that then the output keys will NEVER have 00 in even positions (starting at 0) which would be a little suspicious for some random data
     #
         
-    pick = random.randint(1,255)
+    pick = cryptogen.randrange(1,255)
             
     while picked[pick] or pick == 0:
       # 0 values will be discarded but output it anyway with trailing garbage
       if pick == 0:
         keys[i] += chr(0)
-        keys[i] += chr(random.randint(0,255))
+        keys[i] += chr(cryptogen.randrange(0,255))
           
-      pick = random.randint(1,255)
+      pick = cryptogen.randrange(1,255)
     
     # Keep track of the value we just picked    
     picked[pick] = True
@@ -92,7 +94,7 @@ def encode(data,outputs,k):
     if 0 == len(char):
       break
     byte = ord(char)
-    
+
     charkeys = encodeByte(byte,n,k)
 
     for i in xrange(0,n):
