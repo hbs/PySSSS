@@ -59,7 +59,7 @@ def splitsecret(secret, threshold, numshares):
   # Here we track the number of characters we're padding, because the
   #  pad character is in-band.
   passlen = len(secret)
-  padnum = _padlen - (passlen % _padlen)
+  padnum = (_padlen - (passlen % _padlen)) % _padlen
   secret = "{:0=8x}{:0=4x}{}".format(
           binascii.crc32(secret) & 0xFFFFFFFF,
           padnum,
