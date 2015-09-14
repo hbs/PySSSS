@@ -57,7 +57,16 @@ class Tests(unittest2.TestCase):
     def test_not_enough_shares(self):
         secret = str(os.urandom(100))
         (shares, threshold) = self.rand_shares(secret, 8)
-        self.assertRaises(ValueError, PySSSS.recoversecret, random.sample(shares, threshold-1))
+        with self.assertRaises(ValueError):
+            PySSSS.recoversecret(random.sample(shares, threshold-1))
+
+    def test_bad_threshold(self):
+        with self.assertRaises(ValueError):
+            PySSSS.splitsecret(_secret, _numshares, _threshold)
+
+    def test_not_a_share(self):
+        with self.assertRaises(ValueError):
+            PySSSS.splitsecret(_secret, 1, 1)
 
     def rand_shares(self, secret, maxshares):
         numshares = random.randrange(3, maxshares)

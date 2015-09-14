@@ -51,10 +51,16 @@ def splitsecret(secret, threshold, numshares):
   >>> shares = pyssss.splitsecret(secret, 2, 3)
   >>> len(shares)
   3
+  >>> shares = pyssss.splitsecret(secret, 99, 2) # n.b. threshold > numshares?
 
   """
   global _padlen
   global _padchar
+
+  if threshold > numshares:
+    raise ValueError("threshold {} exceeds number of shares {}".format(threshold, numshares))
+  if numshares == 1:
+    raise ValueError("cannot split secret into 1 part")
 
   # Here we track the number of characters we're padding, because the
   #  pad character is in-band.
