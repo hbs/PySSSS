@@ -109,7 +109,7 @@ def recoversecret(shares):
 
   output = StringIO.StringIO()
   PySSSS.decode(
-          [ StringIO.StringIO(shares[i].decode('hex')) for i in xrange(len(shares)) ], 
+          [ StringIO.StringIO(shares[i].decode('hex')) for i in xrange(len(shares)) ],
           output
           )
   secret = output.getvalue()
