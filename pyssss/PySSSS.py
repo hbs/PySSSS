@@ -19,6 +19,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import random
+import binascii
 
 from GF256elt import GF256elt
 from PGF256 import PGF256
@@ -52,7 +53,7 @@ def encodeByte(byte,n,k):
   P = pickRandomPolynomial(k-1,GF256elt(byte))
   
   # Generate the keys
-  keys = [b"" for i in range(0,n)]
+  keys = [bytearray() for i in range(0,n)]
   
   for i in range(0,n):
 
@@ -68,8 +69,8 @@ def encodeByte(byte,n,k):
     while picked[pick] or pick == 0:
       # 0 values will be discarded but output it anyway with trailing garbage
       if pick == 0:
-        keys[i] += chr(0)
-        keys[i] += chr(random.randint(0,255))
+        keys[i].append(0)
+        keys[i].append(random.randint(0,255))
           
       pick = random.randint(1,255)
     
@@ -79,8 +80,8 @@ def encodeByte(byte,n,k):
     X = GF256elt(pick)
     Y = P.f(X)
     
-    keys[i] += chr(int(X))
-    keys[i] += chr(int(Y))
+    keys[i].append(int(X))
+    keys[i].append(int(Y))
 
   return keys
 
@@ -145,18 +146,18 @@ def decode(keys,output):
     output.write(chr(byte))
 
 if __name__ == "__main__":
-  import StringIO
-  input = StringIO.StringIO("Too many secrets, Marty!")
+  from io import BytesIO
+  input = BytesIO(b"Too many secrets, Marty!")
   outputs = []
   n = 5
   k = 3
   for i in range(n):
-    outputs.append(StringIO.StringIO())
+    outputs.append(BytesIO())
 
   encode(input,outputs,k)
 
   for i in range(n):
-    print(outputs[i].getvalue().encode('hex'))
+    print(binascii.hexlify(outputs[i].getvalue()))
 
   inputs = []
   for i in range(k):
@@ -165,6 +166,6 @@ if __name__ == "__main__":
   for i in range(k):
     inputs[i].seek(0)
 
-  output = StringIO.StringIO()
+  output = BytesIO()
   decode(inputs,output)  
   print(output.getvalue())
