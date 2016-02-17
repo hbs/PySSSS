@@ -45,10 +45,10 @@ class PGF256:
     
     coeffs = []
     
-    for i in xrange(0,minDeg):
+    for i in range(0,minDeg):
       coeffs.append(self.coeff(i) + other.coeff(i))
     
-    for i in xrange(minDeg,maxDeg):
+    for i in range(minDeg,maxDeg):
       if self.deg() > other.deg():
         coeffs.append(self.coeff(i))
       else:
@@ -70,12 +70,12 @@ class PGF256:
     
     coeffs = []
     
-    for i in xrange(0,minDeg + 1):
+    for i in range(0,minDeg + 1):
       coeffs.append(self.coeff(i) - other.coeff(i))
     
     zero = GF256elt(0)
     
-    for i in xrange(minDeg + 1,maxDeg + 1):
+    for i in range(minDeg + 1,maxDeg + 1):
       if self.deg() > other.deg():
         coeffs.append(self.coeff(i))
       else:
@@ -91,10 +91,10 @@ class PGF256:
     if not isinstance(other,PGF256):
       raise Exception()
 
-    rescoeffs = [GF256elt(0) for i in xrange(0,self.deg() + other.deg() + 1)]
+    rescoeffs = [GF256elt(0) for i in range(0,self.deg() + other.deg() + 1)]
     
-    for i in xrange(0,self.deg() + 1):
-      for j in xrange(0,other.deg() + 1):
+    for i in range(0,self.deg() + 1):
+      for j in range(0,other.deg() + 1):
         rescoeffs[i + j] += self.coeff(i) * other.coeff(j)
                     
     return PGF256(rescoeffs)
@@ -114,7 +114,7 @@ class PGF256:
     
     zero = GF256elt(0)
     
-    for i in xrange(0,self.deg() + 1):
+    for i in range(0,self.deg() + 1):
       c.append(self.coeff(i) + zero)
         
     return c

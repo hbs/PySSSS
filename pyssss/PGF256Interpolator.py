@@ -31,7 +31,7 @@ class PGF256Interpolator:
     # Check that all points have different X
     #
     
-    for i in xrange(0,len(points)):
+    for i in range(0,len(points)):
       if points[i][0] in map(lambda x: x[0],points[i+1:]):
         raise Exception("Duplicate point exception")
         
@@ -56,7 +56,7 @@ class PGF256Interpolator:
     
     result = PGF256([GF256elt(0)])
     
-    for j in xrange(0,len(points)):
+    for j in range(0,len(points)):
       result = result + (self.__Lj(points,j) * points[j][1])
 
     return result
@@ -64,7 +64,7 @@ class PGF256Interpolator:
   def __Lj(self,points,j):
     result = GF256elt(1)
     x = PGF256((GF256elt(0),GF256elt(1)))
-    for i in xrange(0,len(points)):
+    for i in range(0,len(points)):
       if j == i:
         continue
       

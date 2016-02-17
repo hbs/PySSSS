@@ -34,7 +34,7 @@ def pickRandomPolynomial(degree,zero):
   
   # Pick coefficients for x^n with n < degree
   
-  for c in xrange(1,degree):
+  for c in range(1,degree):
     coeffs.append(GF256elt(random.randint(0,255)))
           
   # Pick non null coefficient for x^degree
@@ -46,15 +46,15 @@ def pickRandomPolynomial(degree,zero):
 
 def encodeByte(byte,n,k):
   # Allocate array to track duplicates
-  picked = [False for i in xrange(0,256)]
+  picked = [False for i in range(0,256)]
   
   # Pick a random polynomial
   P = pickRandomPolynomial(k-1,GF256elt(byte))
   
   # Generate the keys
-  keys = [b"" for i in xrange(0,n)]
+  keys = [b"" for i in range(0,n)]
   
-  for i in xrange(0,n):
+  for i in range(0,n):
 
     #        
     # Pick a not yet picked X value in [0,255],
@@ -97,7 +97,7 @@ def encode(data,outputs,k):
     
     charkeys = encodeByte(byte,n,k)
 
-    for i in xrange(0,n):
+    for i in range(0,n):
       outputs[i].write(charkeys[i])
 
 def decode(keys,output):
@@ -113,7 +113,7 @@ def decode(keys,output):
 
   while not eok:
     points = []
-    for i in xrange(0,len(keys)):
+    for i in range(0,len(keys)):
       while True:
         b = keys[i].read(1)
         if 0 == len(b):
@@ -150,19 +150,19 @@ if __name__ == "__main__":
   outputs = []
   n = 5
   k = 3
-  for i in xrange(n):
+  for i in range(n):
     outputs.append(StringIO.StringIO())
 
   encode(input,outputs,k)
 
-  for i in xrange(n):
+  for i in range(n):
     print(outputs[i].getvalue().encode('hex'))
 
   inputs = []
-  for i in xrange(k):
+  for i in range(k):
     inputs.append(outputs[i+1])
 
-  for i in xrange(k):
+  for i in range(k):
     inputs[i].seek(0)
 
   output = StringIO.StringIO()

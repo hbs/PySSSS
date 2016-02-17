@@ -115,7 +115,7 @@ class GF256elt:
     GF256elt.__logtable[0] = (1 - GF) & 0xff
     GF256elt.__exptable[0] = 1
 
-    for i in xrange(1,GF):
+    for i in range(1,GF):
       GF256elt.__exptable[i] = GF256elt.__exptable[i-1] * 2
       if GF256elt.__exptable[i] >= GF:
         GF256elt.__exptable[i] ^= PP
