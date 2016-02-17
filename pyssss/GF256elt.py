@@ -15,6 +15,8 @@
 #  limitations under the License.
 #
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 class Callable:
     def __init__(self, anycallable):
         self.__call__ = anycallable
@@ -58,7 +60,7 @@ class GF256elt:
     
     return GF256elt(GF256elt.__exptable[p])
       
-  def __div__(self,other):
+  def __truediv__(self,other):
     if not isinstance(other,GF256elt):
       raise Exception()
     
@@ -115,10 +117,10 @@ class GF256elt:
     for i in xrange(1,GF):
       GF256elt.__exptable[i] = GF256elt.__exptable[i-1] * 2
       if GF256elt.__exptable[i] >= GF:
-  	GF256elt.__exptable[i] ^= PP
+        GF256elt.__exptable[i] ^= PP
 
       GF256elt.__exptable[i] &= 0xff
-      GF256elt.__logtable[GF256elt.__exptable[i]]= i	
+      GF256elt.__logtable[GF256elt.__exptable[i]]= i
       
   def generate_logexp_tables():
     """Generate logarithm and exponential tables for the GF(256) generator 0x03
@@ -153,8 +155,8 @@ class GF256elt:
     GF256elt.__logtable[0] = 0
 
   def dump_tables():
-    print GF256elt.__exptable
-    print GF256elt.__logtable
+    print(GF256elt.__exptable)
+    print(GF256elt.__logtable)
 
   generate_logexp_tables = Callable(generate_logexp_tables)
   generate_pplogexp_tables = Callable(generate_pplogexp_tables)

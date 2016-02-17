@@ -16,6 +16,8 @@
 #
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import random
 
 from GF256elt import GF256elt
@@ -50,7 +52,7 @@ def encodeByte(byte,n,k):
   P = pickRandomPolynomial(k-1,GF256elt(byte))
   
   # Generate the keys
-  keys = ["" for i in xrange(0,n)]
+  keys = [b"" for i in xrange(0,n)]
   
   for i in xrange(0,n):
 
@@ -154,7 +156,7 @@ if __name__ == "__main__":
   encode(input,outputs,k)
 
   for i in xrange(n):
-    print outputs[i].getvalue().encode('hex')
+    print(outputs[i].getvalue().encode('hex'))
 
   inputs = []
   for i in xrange(k):
@@ -165,4 +167,4 @@ if __name__ == "__main__":
 
   output = StringIO.StringIO()
   decode(inputs,output)  
-  print output.getvalue()
+  print(output.getvalue())
