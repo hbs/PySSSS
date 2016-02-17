@@ -102,6 +102,7 @@ class GF256elt:
   def __eq__(self,other):
     return self.__bytevalue == other.__bytevalue
 
+  @staticmethod
   def generate_pplogexp_tables(PP):
     """Generate logarithm and exponential tables for Gf(256) with a prime
        polynomial whose value is 'PP'."""
@@ -122,6 +123,7 @@ class GF256elt:
       GF256elt.__exptable[i] &= 0xff
       GF256elt.__logtable[GF256elt.__exptable[i]]= i
       
+  @staticmethod
   def generate_logexp_tables():
     """Generate logarithm and exponential tables for the GF(256) generator 0x03
        and the modulo polynomial x^8 + x^4 + x^3 + x + 1 (0x11b) as defined
@@ -154,13 +156,10 @@ class GF256elt:
     GF256elt.__exptable[255] = GF256elt.__exptable[0] 
     GF256elt.__logtable[0] = 0
 
+  @staticmethod
   def dump_tables():
     print(GF256elt.__exptable)
     print(GF256elt.__logtable)
-
-  generate_logexp_tables = Callable(generate_logexp_tables)
-  generate_pplogexp_tables = Callable(generate_pplogexp_tables)
-  dump_tables = Callable(dump_tables)
 
 ##
 ## Generate log/exp tables based on a prime polynomial
