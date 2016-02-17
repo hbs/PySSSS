@@ -143,11 +143,11 @@ def decode(keys,output):
 
     # Decode next byte
     byte = interpolator.interpolate(points).f(zero)
-    output.write(chr(byte))
+    output.write(bytearray((int(byte),)))
 
 if __name__ == "__main__":
   from io import BytesIO
-  input = BytesIO(b"Too many secrets, Marty!")
+  input = BytesIO("Too many secrets, Marty!".encode('UTF-8'))
   outputs = []
   n = 5
   k = 3
@@ -157,7 +157,7 @@ if __name__ == "__main__":
   encode(input,outputs,k)
 
   for i in range(n):
-    print(binascii.hexlify(outputs[i].getvalue()))
+    print(binascii.hexlify(outputs[i].getvalue()).decode('UTF-8'))
 
   inputs = []
   for i in range(k):
@@ -168,4 +168,4 @@ if __name__ == "__main__":
 
   output = BytesIO()
   decode(inputs,output)  
-  print(output.getvalue())
+  print(output.getvalue().decode('UTF-8'))
