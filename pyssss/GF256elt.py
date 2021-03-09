@@ -15,6 +15,8 @@
 #  limitations under the License.
 #
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 class Callable:
     def __init__(self, anycallable):
         self.__call__ = anycallable
@@ -58,7 +60,7 @@ class GF256elt:
     
     return GF256elt(GF256elt.__exptable[p])
       
-  def __div__(self,other):
+  def __truediv__(self,other):
     if not isinstance(other,GF256elt):
       raise Exception()
     
@@ -100,6 +102,7 @@ class GF256elt:
   def __eq__(self,other):
     return self.__bytevalue == other.__bytevalue
 
+  @staticmethod
   def generate_pplogexp_tables(G,PP):
     """Generate logarithm and exponential tables for Gf(256) with a prime
        polynomial whose value is 'PP' and a generator value of 'G'."""
@@ -112,7 +115,7 @@ class GF256elt:
     GF256elt.__logtable[0] = (1 - GF) & 0xff
     GF256elt.__exptable[0] = 1
 
-    for i in xrange(1,GF):
+    for i in range(1,GF):
       z = 0
       x = GF256elt.__exptable[i - 1]
       y = G
@@ -128,6 +131,7 @@ class GF256elt:
       GF256elt.__exptable[i] = z
       GF256elt.__logtable[GF256elt.__exptable[i]]= i % 255
       
+  @staticmethod
   def generate_logexp_tables():
     """Generate logarithm and exponential tables for the GF(256) generator 0x03
        and the modulo polynomial x^8 + x^4 + x^3 + x + 1 (0x11b) as defined
@@ -160,13 +164,10 @@ class GF256elt:
     GF256elt.__exptable[255] = GF256elt.__exptable[0] 
     GF256elt.__logtable[0] = 0
 
+  @staticmethod
   def dump_tables():
-    print GF256elt.__exptable
-    print GF256elt.__logtable
-
-  generate_logexp_tables = Callable(generate_logexp_tables)
-  generate_pplogexp_tables = Callable(generate_pplogexp_tables)
-  dump_tables = Callable(dump_tables)
+    print(GF256elt.__exptable)
+    print(GF256elt.__logtable)
 
 ##
 ## Generate log/exp tables based on a prime polynomial
@@ -178,12 +179,12 @@ class GF256elt:
 #
 # For Rijndael compatibility (0x11b prime polynomial and 0x03 as generator)
 #
-#GF256elt.generate_logexp_tables()
+GF256elt.generate_logexp_tables()
 #GF256elt.generate_pplogexp_tables(3, 0x11b)
 
 #
 # For buttsoft/QR Code compatibility (0x11d prime polynomial)
 #
-GF256elt.generate_pplogexp_tables(2,0x11d)
-GF256elt.dump_tables()
+#GF256elt.generate_pplogexp_tables(2,0x11d)
+#GF256elt.dump_tables()
 
