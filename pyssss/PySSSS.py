@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import random
 import binascii
 
+from io import BytesIO
 from GF256 import GF256
 from GF256elt import GF256elt
 from PGF256 import PGF256
@@ -148,8 +149,29 @@ def decode(GF,keys,output):
     byte = interpolator.interpolate(points).f(zero)
     output.write(bytearray((int(byte),)))
 
+def decodeBytes(GF,splits):
+  """Decode from the splits in 'splits' which are byte arrays."""
+
+  keys = []
+  for split in splits:
+    keys.append(BytesIO(split))
+
+  output = BytesIO()
+
+  decode(GF,keys,output)
+
+  secret = output.getvalue()
+
+  if isinstance(secret, str):
+    bytes = bytearray()
+    for char in secret:
+      bytes.append(ord(char))
+
+    secret = bytes
+
+  return secret
+ 
 if __name__ == "__main__":
-  from io import BytesIO
   input = BytesIO("Too many secrets, Marty!".encode('UTF-8'))
   outputs = []
   n = 5
