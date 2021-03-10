@@ -27,6 +27,8 @@ class PGF256Interpolator:
   def interpolate(self,points):
     """Returns a PGF256 polynomial interpolating all GF256xGF256 tuples in points."""
 
+    GF = points[0][0].GF256
+
     #
     # Check that all points have different X
     #
@@ -40,9 +42,9 @@ class PGF256Interpolator:
     #
 
     if (2 == len(points)):
-      x = PGF256((GF256elt(0),GF256elt(1)))
-      P = PGF256([points[1][1]]) * (x - points[0][0]) * (GF256elt(1) / (points[1][0] - points[0][0]))
-      P = P + PGF256([points[0][1]]) * (x - points[1][0]) * (GF256elt(1) / (points[0][0] - points[1][0]));
+      x = PGF256((GF256elt(GF, 0),GF256elt(GF, 1)))
+      P = PGF256([points[1][1]]) * (x - points[0][0]) * (GF256elt(GF, 1) / (points[1][0] - points[0][0]))
+      P = P + PGF256([points[0][1]]) * (x - points[1][0]) * (GF256elt(GF, 1) / (points[0][0] - points[1][0]));
       return P
 
     #
@@ -54,7 +56,7 @@ class PGF256Interpolator:
     # Lj(xi) = kronecker_delta(i,j)
     # 
     
-    result = PGF256([GF256elt(0)])
+    result = PGF256([GF256elt(GF, 0)])
     
     for j in range(0,len(points)):
       result = result + (self.__Lj(points,j) * points[j][1])
@@ -62,8 +64,9 @@ class PGF256Interpolator:
     return result
               
   def __Lj(self,points,j):
-    result = GF256elt(1)
-    x = PGF256((GF256elt(0),GF256elt(1)))
+    GF = points[0][0].GF256
+    result = GF256elt(GF, 1)
+    x = PGF256((GF256elt(GF, 0),GF256elt(GF, 1)))
     for i in range(0,len(points)):
       if j == i:
         continue
@@ -71,7 +74,7 @@ class PGF256Interpolator:
       # P = x
       P = x
       
-      P = (P - points[i][0]) * (GF256elt(1) / (points[j][0] - points[i][0])) 
+      P = (P - points[i][0]) * (GF256elt(GF, 1) / (points[j][0] - points[i][0])) 
 
       result = P * result
                     

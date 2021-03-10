@@ -73,7 +73,7 @@ class PGF256:
     for i in range(0,minDeg + 1):
       coeffs.append(self.coeff(i) - other.coeff(i))
     
-    zero = GF256elt(0)
+    zero = GF256elt(self.coeff[0].GF256,0)
     
     for i in range(minDeg + 1,maxDeg + 1):
       if self.deg() > other.deg():
@@ -91,7 +91,7 @@ class PGF256:
     if not isinstance(other,PGF256):
       raise Exception()
 
-    rescoeffs = [GF256elt(0) for i in range(0,self.deg() + other.deg() + 1)]
+    rescoeffs = [GF256elt(self.__coefficients[0].GF256,0) for i in range(0,self.deg() + other.deg() + 1)]
     
     for i in range(0,self.deg() + 1):
       for j in range(0,other.deg() + 1):
@@ -103,7 +103,7 @@ class PGF256:
     "Return the coefficient for x^i."
     
     if i >= len(self.__coefficients):
-      return GF256elt(0)
+      return GF256elt(self.__coefficients[0].GF256,0)
     else:
       return self.__coefficients[i]
       
@@ -112,7 +112,7 @@ class PGF256:
     
     c = []
     
-    zero = GF256elt(0)
+    zero = GF256elt(self.__coefficients[0].GF256,0)
     
     for i in range(0,self.deg() + 1):
       c.append(self.coeff(i) + zero)
@@ -139,7 +139,7 @@ class PGF256:
     if not isinstance(x, GF256elt):
       raise Exception()
     
-    result = GF256elt(0)
+    result = GF256elt(self.__coefficients[0].GF256,0)
     
     for i in range(1,len(self.__coefficients)+1):
       result = result * x

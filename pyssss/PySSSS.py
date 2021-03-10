@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import random
 import binascii
 
+from GF256 import GF256
 from GF256elt import GF256elt
 from PGF256 import PGF256
 from PGF256Interpolator import PGF256Interpolator
@@ -29,6 +30,8 @@ def pickRandomPolynomial(degree,zero):
   """Pick a random PGF256 polynomial P such that P(0) = zero"""
    
   coeffs = []
+
+  GF = zero.GF256
   
   # Set f(0)
   coeffs.append(zero)
@@ -36,21 +39,21 @@ def pickRandomPolynomial(degree,zero):
   # Pick coefficients for x^n with n < degree
   
   for c in range(1,degree):
-    coeffs.append(GF256elt(random.randint(0,255)))
+    coeffs.append(GF256elt(GF,random.randint(0,255)))
           
   # Pick non null coefficient for x^degree
   
-  coeffs.append(GF256elt(random.randint(1,255)))
+  coeffs.append(GF256elt(GF,random.randint(1,255)))
   
   return PGF256(coeffs)
 
 
-def encodeByte(byte,n,k):
+def encodeByte(GF,byte,n,k):
   # Allocate array to track duplicates
   picked = [False for i in range(0,256)]
   
   # Pick a random polynomial
-  P = pickRandomPolynomial(k-1,GF256elt(byte))
+  P = pickRandomPolynomial(k-1,GF256elt(GF,byte))
   
   # Generate the keys
   keys = [bytearray() for i in range(0,n)]
@@ -77,7 +80,7 @@ def encodeByte(byte,n,k):
     # Keep track of the value we just picked    
     picked[pick] = True
     
-    X = GF256elt(pick)
+    X = GF256elt(GF,pick)
     Y = P.f(X)
     
     keys[i].append(int(X))
@@ -85,7 +88,7 @@ def encodeByte(byte,n,k):
 
   return keys
 
-def encode(data,outputs,k):
+def encode(GF,data,outputs,k):
       
   n = len(outputs)
 
@@ -96,15 +99,15 @@ def encode(data,outputs,k):
       break
     byte = ord(char)
     
-    charkeys = encodeByte(byte,n,k)
+    charkeys = encodeByte(GF,byte,n,k)
 
     for i in range(0,n):
       outputs[i].write(charkeys[i])
 
-def decode(keys,output):
+def decode(GF,keys,output):
   
   interpolator = PGF256Interpolator()
-  zero = GF256elt(0)
+  zero = GF256elt(GF,0)
   
   data = ""
   
@@ -134,7 +137,7 @@ def decode(keys,output):
       Y = ord(keys[i].read(1))
       
       # Push point
-      points.append((GF256elt(X),GF256elt(Y)))
+      points.append((GF256elt(GF,X),GF256elt(GF,Y)))
 
     if eok:
       if 0 != i:
@@ -154,7 +157,7 @@ if __name__ == "__main__":
   for i in range(n):
     outputs.append(BytesIO())
 
-  encode(input,outputs,k)
+  encode(GF256.RIJNDAEL,input,outputs,k)
 
   for i in range(n):
     print(binascii.hexlify(outputs[i].getvalue()).decode('UTF-8'))
@@ -167,5 +170,5 @@ if __name__ == "__main__":
     inputs[i].seek(0)
 
   output = BytesIO()
-  decode(inputs,output)  
+  decode(GF256.RIJNDAEL,inputs,output)  
   print(output.getvalue().decode('UTF-8'))
