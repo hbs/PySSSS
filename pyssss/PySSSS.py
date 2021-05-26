@@ -27,6 +27,7 @@ from GF256elt import GF256elt
 from PGF256 import PGF256
 from PGF256Interpolator import PGF256Interpolator
 
+srandom = random.SystemRandom()
 def pickRandomPolynomial(degree,zero):
   """Pick a random PGF256 polynomial P such that P(0) = zero"""
    
@@ -40,11 +41,11 @@ def pickRandomPolynomial(degree,zero):
   # Pick coefficients for x^n with n < degree
   
   for c in range(1,degree):
-    coeffs.append(GF256elt(GF,random.randint(0,255)))
+    coeffs.append(GF256elt(GF,srandom.randint(0,255)))
           
   # Pick non null coefficient for x^degree
   
-  coeffs.append(GF256elt(GF,random.randint(1,255)))
+  coeffs.append(GF256elt(GF,srandom.randint(1,255)))
   
   return PGF256(coeffs)
 
@@ -68,15 +69,15 @@ def encodeByte(GF,byte,n,k):
     # If we do not do that then the output keys will NEVER have 00 in even positions (starting at 0) which would be a little suspicious for some random data
     #
         
-    pick = random.randint(1,255)
+    pick = srandom.randint(1,255)
             
     while picked[pick] or pick == 0:
       # 0 values will be discarded but output it anyway with trailing garbage
       if pick == 0:
         keys[i].append(0)
-        keys[i].append(random.randint(0,255))
+        keys[i].append(srandom.randint(0,255))
           
-      pick = random.randint(1,255)
+      pick = srandom.randint(1,255)
     
     # Keep track of the value we just picked    
     picked[pick] = True
