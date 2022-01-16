@@ -72,5 +72,5 @@ class GF256:
 #
 # For Rijndael compatibility (0x11b prime polynomial and 0x03 as generator)
 #
-GF256.RIJNDAEL = GF256(3,0x11b)
-GF256.QR = GF256(2,0x11d)
+RIJNDAEL = GF256(3,0x11b)
+QR = GF256(2,0x11d)
